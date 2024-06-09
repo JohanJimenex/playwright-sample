@@ -13,18 +13,32 @@ test.describe("Login Test Cases", () => {
     await page.goto(urlApp);
   });
 
-  //Usando POM
-  test("Login with valid credentials con POM", async ({ page }) => {
-    await loginPage.Login("standard_user", "secret_sauce");
-    await expect(page).toHaveURL("https://www.saucedemo.com/v1/inventory.html");
-  });
-
-  //Sin POM
-  test("Login with invalid credentials sin POM", async ({ page }) => {
+  //Sin usar POM
+  test("Login with valid credentials 2", async ({ page }) => {
     await page.fill("#user-name", "standard_user");
     await page.fill("#password", "secret_sauce");
     await page.click("#login-button");
     await expect(page).toHaveURL("https://www.saucedemo.com/v1/inventory.html");
+  });
+
+  //Usando POM
+  test("Login with valid credentials", async ({ page }) => {
+    await loginPage.Login("standard_user", "secret_sauce");
+    await expect(page).toHaveURL("https://www.saucedemo.com/v1/inventory.html");
+  });
+
+  test("Login with invalid credentials", async ({ page }) => {
+    await loginPage.Login("klk", "klk");
+    const isVisible = await page.isVisible('[data-test="error"]');
+    expect(isVisible).toBeTruthy();
+  });
+
+  test("Login with invalid username", async ({ page }) => {
+    await loginPage.Login("klk", "secret_sauce");
+
+    // const isVisible = await page.isVisible('[data-test="error"]');
+    const isVisible = await page.$('[data-test="error"]');
+    expect(isVisible).toBeTruthy();
   });
 });
 
